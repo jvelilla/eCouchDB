@@ -1,0 +1,28 @@
+
+couchdb_client: system execution failed.
+Following is the set of recorded exceptions:
+
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+CURL_EASY_EXTERNALS c_perform              Segmentation violation:      
+<0000000002351044>                         Operating system signal.      Fail
+-------------------------------------------------------------------------------
+CURL_EASY_EXTERNALS c_perform                                           
+<0000000002351044>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+CURL_EASY_EXTERNALS perform @4                                          
+<0000000002351044>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+HTTP_CLIENT         put @10                                             
+<0000000002350624>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+COUCHDB_CLIENT      db_create @1                                        
+<0000000002350438>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+COUCHDB_CLIENT      make_client @6                                      
+<0000000002350438>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+COUCHDB_CLIENT      root's creation                                     
+<0000000002350438>                         Routine failure.              Exit
+-------------------------------------------------------------------------------
