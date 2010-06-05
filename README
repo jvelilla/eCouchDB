@@ -1,0 +1,10 @@
+eCouchDb: Eiffel library for CouchDB.
+
+Dependencies:
+
+Eiffel cURL
+Eiffel eJSON
+
+
+Install
+
