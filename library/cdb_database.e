@@ -13,7 +13,7 @@ feature -- Access
 	db_create ( a_db : STRING) : STRING
 			-- Database creation
 		do
-			Result := http.put("/"+a_db)
+			Result := http.put("/"+a_db,Void)
 		end
 
 	delete ( a_db : STRING) : STRING
@@ -43,7 +43,7 @@ feature -- Access
 	bulk_docs (a_db : STRING; documents : STRING) : STRING
 			-- Update many documents at once
 		do
-			Result := http.post ("/"+a_db+"/_bulk_docs/"+documents,void)
+			Result := http.post ("/"+a_db+"/_bulk_docs/",documents)
 		end
 
 	temp_view (a_db : STRING; view_code : STRING) : STRING

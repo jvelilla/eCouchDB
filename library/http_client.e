@@ -94,11 +94,13 @@ feature -- HTTP VERBS
 			end
 		end
 
-	put ( a_uri : STRING) : STRING
+	put ( a_uri : STRING; a_data : STRING) : STRING
 		local
 			l_result: INTEGER
 			end_point : STRING
 			l_curl_string: CURL_STRING
+			p: POINTER
+			l_fupload: RAW_FILE
 		do
 
 			end_point := host + ":" + port.out + a_uri
@@ -115,7 +117,23 @@ feature -- HTTP VERBS
 				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url,end_point )
 
 					-- Now specify the PUT data
-				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_put, end_point)
+				if a_data = Void then
+					curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_put, end_point)
+				else
+					-- specify callback read function for upload data
+							-- enable uploadig
+--					p := curl.slist_append (p, "Content-Type: application/json")
+--					curl_easy.setopt_slist (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_httpheader, p)
+--					p := curl.slist_append (p,"Content-Length:"+a_data.count.out)
+--					curl_easy.setopt_slist (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_httpheader, p)
+					curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_verbose, 1)
+					curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_upload, 1)
+					curl_easy.set_curl_function (create {CUSTOM_READ_FUNCTION}.make_with_data(a_data))
+					curl_easy.set_read_function (curl_handle)
+					create l_fupload.make_open_read ("temp_json_data.json")
+					curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_infilesize_large, l_fupload.count)
+				end
+
 
 					-- Send all data to default Eiffel curl write function
                 curl_easy.set_write_function (curl_handle)
@@ -125,10 +143,9 @@ feature -- HTTP VERBS
 
 					-- Perform the request, `l_result' will get the return code
 				l_result := curl_easy.perform (curl_handle)
-
-				if l_result = 0 then
-					Result := l_curl_string.as_string_8
-				end
+				l_fupload.close
+				l_fupload.wipe_out
+				Result := l_curl_string.as_string_8
 					-- Always cleanup
 				curl_easy.cleanup (curl_handle)
 			else

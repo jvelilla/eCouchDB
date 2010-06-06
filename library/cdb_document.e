@@ -25,7 +25,7 @@ feature -- Access
 	update ( a_db : STRING ; a_doc : STRING) : STRING
 			-- Save updated document
 		do
-			Result := http.put ("/"+a_db+"/"+a_doc)
+			Result := http.put ("/"+a_db,a_doc)
 		end
 
 	doc_create ( a_db : STRING; a_data : STRING)  : STRING

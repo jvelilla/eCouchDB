@@ -59,8 +59,14 @@ feature -- Test routines
 			assert ("Not null", l_response /= Void)
 		end
 
+	test_update
+		do
+			create cdb_document
+			print ("%NUpdate a document%N"+ cdb_document.update("erest/7f549eb903ee29c3e66db6b039009c0f","{%"key%":%"testupdate%"}"))
+		end
 feature -- Implementation
 	cdb_database : CDB_DATABASE
+	cdb_document : CDB_DOCUMENT
 end
 
 

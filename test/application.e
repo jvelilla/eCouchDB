@@ -10,8 +10,9 @@ feature -- Initialization
 			create cdb_server
 			create cdb_document
 			create cdb_database
-			test_server
-			test_database
+--			test_server
+--			test_database
+			test_document
 		end
 
 	test_server
@@ -29,17 +30,33 @@ feature -- Initialization
 	test_database
 		local
 			l_response : STRING
+			l_docs : STRING
 		do
 			print ("%N COUCHDB DATABASE API %N")
-			print("%NCreation%N"+cdb_database.db_create ("erest"))
-			print("%NInfo%N"+cdb_database.info ("erest"))
-			print("%NChange feed%N"+cdb_database.change_feed ("erest"))
-			print ("%NCompaction:%N" +cdb_database.compaction("erest"))
-			--
-			--		print("%NTemporary Views%N"+cdb_database.temp_view ("erest", Void))
+--			print("%NCreation%N"+cdb_database.db_create ("erest"))
+--			print("%NInfo%N"+cdb_database.info ("erest"))
+--			print("%NChange feed%N"+cdb_database.change_feed ("erest"))
+--			--		print ("%NCompaction:%N" +cdb_database.compaction("erest"))
+--			--
+--			--		print("%NTemporary Views%N"+cdb_database.temp_view ("erest", Void))
+--		 	l_docs := "{%"title%":%"eJSON: The Definitive Guide%",%"isbn%":%"123123-413243%",%"author%":{%"name%":%"Foo Bar%"}}"
+--		 	print ("%NBulk docs:%N" +cdb_database.bulk_docs ("erest", l_docs))
+--		 	print ("%NTemp view%N" + cdb_database.temp_view ("erest", "{}"))
+--		 	print ("%NTemp view%N" + cdb_database.temp_view ("erest", l_docs))
+			--print ("%NView cleanup%N" + cdb_database.view_cleanup ("erest"))
 		end
 
 
+	test_document
+		local
+			l_response : STRING
+			l_docs : STRING
+		do
+--			print ("%NList all documents:%N"+ cdb_document.list ("erest"))
+--			print ("%NCreate a document%N"+ cdb_document.doc_create ("erest", "{%"key%":%"value%"}%N"))
+--			print ("%NGet Document%N"+ cdb_document.get ("erest", "7f549eb903ee29c3e66db6b039009c0f"))
+			print ("%NUpdate a document%N"+ cdb_document.update("erest/7f549eb903ee29c3e66db6b039009c0f","{%"key%":%"testupdate%"}%N"))
+		end
 feature -- Implementation
 
 	cdb_server : CDB_SERVER
