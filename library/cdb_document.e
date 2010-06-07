@@ -34,9 +34,10 @@ feature -- Access
 			Result := http.post ("/" +a_db,a_data)
 		end
 
-	doc_delete ( a_db : STRING; a_doc : STRING) : STRING
+	doc_delete ( a_db : STRING; a_doc : STRING; a_rev : STRING) : STRING
 			-- Delete document
 		do
+			Result := http.delete ("/"+a_db+"/"+a_doc+"?rev="+a_rev)
 		end
 
 end

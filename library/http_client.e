@@ -95,64 +95,62 @@ feature -- HTTP VERBS
 		end
 
 	put ( a_uri : STRING; a_data : STRING) : STRING
-		local
-			l_result: INTEGER
-			end_point : STRING
-			l_curl_string: CURL_STRING
-			p: POINTER
-			l_fupload: RAW_FILE
-		do
+        local
+            l_result: INTEGER
+            end_point : STRING
+            l_curl_string: CURL_STRING
+            p: POINTER
+            l_fupload: RAW_FILE
+        do
 
-			end_point := host + ":" + port.out + a_uri
-			print ("%NCalling PUT method :" + end_point +"%N" )
-			io.put_new_line
+            end_point := host + ":" + port.out + a_uri
+            print ("%NCalling PUT method :" + end_point +"%N" )
+            io.put_new_line
 
-			if curl_easy.is_dynamic_library_exists then
-				create l_curl_string.make_empty
-				curl_handle := curl_easy.init
+            if curl_easy.is_dynamic_library_exists then
+                create l_curl_string.make_empty
+                curl_handle := curl_easy.init
 
-					-- First set the URL that is about to receive our POST. This URL can
-					-- just as well be a https:// URL if that is what should receive the
-					-- data.
-				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url,end_point )
+                    -- First set the URL that is about to receive our POST. This URL can
+                    -- just as well be a https:// URL if that is what should receive the
+                    -- data.
+                curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url,end_point )
 
-					-- Now specify the PUT data
-				if a_data = Void then
-					curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_put, end_point)
-				else
-					-- specify callback read function for upload data
-							-- enable uploadig
---					p := curl.slist_append (p, "Content-Type: application/json")
---					curl_easy.setopt_slist (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_httpheader, p)
---					p := curl.slist_append (p,"Content-Length:"+a_data.count.out)
---					curl_easy.setopt_slist (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_httpheader, p)
-					curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_verbose, 1)
-					curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_upload, 1)
-					curl_easy.set_curl_function (create {CUSTOM_READ_FUNCTION}.make_with_data(a_data))
-					curl_easy.set_read_function (curl_handle)
-					create l_fupload.make_open_read ("temp_json_data.json")
-					curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_infilesize_large, l_fupload.count)
-				end
+                    -- Now specify the PUT data
+                if a_data = Void then
+                    curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_put, end_point)
+                else
+                    -- specify callback read function for upload data
+                    -- enable uploadig
+                    curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_verbose, 1)
+                    curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_upload, 1)
+                    curl_easy.set_curl_function (create {CUSTOM_READ_FUNCTION}.make_with_data(a_data))
+                    curl_easy.set_read_function (curl_handle)
+--                    create l_fupload.make_open_read ("temp_json_data.json")
+                    curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_infilesize_large, a_data.count)
+                end
 
 
-					-- Send all data to default Eiffel curl write function
+                    -- Send all data to default Eiffel curl write function
                 curl_easy.set_write_function (curl_handle)
 
                     -- We pass our `l_curl_string''s object id to the callback function */
                 curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_writedata, l_curl_string.object_id)
 
-					-- Perform the request, `l_result' will get the return code
-				l_result := curl_easy.perform (curl_handle)
-				l_fupload.close
-				l_fupload.wipe_out
-				Result := l_curl_string.as_string_8
-					-- Always cleanup
-				curl_easy.cleanup (curl_handle)
-			else
-				io.error.put_string ("cURL library not found!")
-				io.error.put_new_line
-			end
-	end
+                    -- Perform the request, `l_result' will get the return code
+                l_result := curl_easy.perform (curl_handle)
+--                if a_data /= Void then
+--                    l_fupload.close
+--                    l_fupload.wipe_out
+--                end
+                Result := l_curl_string.as_string_8
+                    -- Always cleanup
+                curl_easy.cleanup (curl_handle)
+            else
+                io.error.put_string ("cURL library not found!")
+                io.error.put_new_line
+            end
+    end
 
 
 	post ( a_uri : STRING; a_data : STRING) : STRING
@@ -237,10 +235,9 @@ feature -- HTTP VERBS
 					-- Perform the request, `l_result' will get the return code
 				l_result := curl_easy.perform (curl_handle)
 
-				if l_result = 0 then
-					Result := l_curl_string.as_string_8
-				end
-					-- Always cleanup
+				Result := l_curl_string.as_string_8
+
+				-- Always cleanup
 				curl_easy.cleanup (curl_handle)
 			else
 				io.error.put_string ("cURL library not found!")

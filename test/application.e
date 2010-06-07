@@ -55,7 +55,8 @@ feature -- Initialization
 --			print ("%NList all documents:%N"+ cdb_document.list ("erest"))
 --			print ("%NCreate a document%N"+ cdb_document.doc_create ("erest", "{%"key%":%"value%"}%N"))
 --			print ("%NGet Document%N"+ cdb_document.get ("erest", "7f549eb903ee29c3e66db6b039009c0f"))
-			print ("%NUpdate a document%N"+ cdb_document.update("erest/7f549eb903ee29c3e66db6b039009c0f","{%"key%":%"testupdate%"}%N"))
+--			print ("%NUpdate a document%N"+ cdb_document.update("erest/7f549eb903ee29c3e66db6b039009c0f","{%"key%":%"testupdate%"}%N"))
+			print ("%NDelete a document%N"+ cdb_document.doc_delete("erest","7f549eb903ee29c3e66db6b039009c0f","1-59414e77c768bc202142ac82c2f129de"))
 		end
 feature -- Implementation
 
